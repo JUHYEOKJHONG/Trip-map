@@ -740,7 +740,6 @@ window.addEventListener('load', function(){
 
   // ---- draw itinerary ----
   const groups = {}; const allLatLng = [];
-  const CITY_ORDER = ['프라하','이동','비엔나','알프스','뮌헨'];
   const CITY_ICON = {'프라하':'🇨🇿','비엔나':'🇦🇹','알프스':'🏔','뮌헨':'🇩🇪','이동':'🚆'};
 
   DAYS.forEach(function(d){
@@ -779,13 +778,14 @@ window.addEventListener('load', function(){
     L.DomEvent.disableClickPropagation(div);
     let html = '<details open><summary><b>날짜 레이어</b></summary>' +
       '<button id="allon">전체 켜기</button><button id="alloff">전체 끄기</button>';
-    CITY_ORDER.forEach(function(city){
-      const items = Object.keys(groups).filter(k=>groups[k].city===city);
-      if (!items.length) return;
-      html += '<div class="grp">'+(CITY_ICON[city]||'')+' '+city+'</div>';
-      items.forEach(function(k){
-        html += '<div class="row" data-k="'+k+'"><span class="sw" style="background:'+groups[k].color+'"></span>'+k+'</div>';
-      });
+    let lastCity = null;
+    Object.keys(groups).forEach(function(k){
+      const city = groups[k].city;
+      if (city !== lastCity){
+        html += '<div class="grp">'+(CITY_ICON[city]||'')+' '+city+'</div>';
+        lastCity = city;
+      }
+      html += '<div class="row" data-k="'+k+'"><span class="sw" style="background:'+groups[k].color+'"></span>'+k+'</div>';
     });
     html += '</details>';
     div.innerHTML = html;
