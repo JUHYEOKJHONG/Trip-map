@@ -686,7 +686,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-container a.leaflet-popup-close-button { font-size:14px; }
   .legend { background:rgba(255,255,255,.95); padding:8px 10px; border-radius:8px; font-size:12px;
             max-height:70vh; overflow-y:auto; box-shadow:0 1px 6px rgba(0,0,0,.3); line-height:1.7; }
-  .legend summary { font-size:10px; color:#888; margin:6px 0 2px; letter-spacing:.5px; cursor:pointer; }
+  .legend .grp { font-size:10px; color:#888; margin:6px 0 2px; letter-spacing:.5px; }
+  .legend summary { cursor:pointer; margin-bottom:4px; }
   .legend .row { cursor:pointer; display:flex; align-items:center; gap:6px; }
   .legend .row.off { opacity:.4; }
   .legend .sw { width:12px; height:12px; border-radius:3px; flex:0 0 auto; }
@@ -776,16 +777,17 @@ window.addEventListener('load', function(){
   legend.onAdd = function(){
     const div = L.DomUtil.create('div','legend');
     L.DomEvent.disableClickPropagation(div);
-    let html = '<b>날짜 레이어</b><br><button id="allon">전체 켜기</button><button id="alloff">전체 끄기</button>';
+    let html = '<details open><summary><b>날짜 레이어</b></summary>' +
+      '<button id="allon">전체 켜기</button><button id="alloff">전체 끄기</button>';
     CITY_ORDER.forEach(function(city){
       const items = Object.keys(groups).filter(k=>groups[k].city===city);
       if (!items.length) return;
-      html += '<details open><summary>'+(CITY_ICON[city]||'')+' '+city+'</summary>';
+      html += '<div class="grp">'+(CITY_ICON[city]||'')+' '+city+'</div>';
       items.forEach(function(k){
         html += '<div class="row" data-k="'+k+'"><span class="sw" style="background:'+groups[k].color+'"></span>'+k+'</div>';
       });
-      html += '</details>';
     });
+    html += '</details>';
     div.innerHTML = html;
     return div;
   };
